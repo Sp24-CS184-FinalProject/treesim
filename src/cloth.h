@@ -1,3 +1,4 @@
+
 #ifndef CLOTH_H
 #define CLOTH_H
 
