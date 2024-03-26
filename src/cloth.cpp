@@ -32,6 +32,54 @@ Cloth::~Cloth() {
 
 void Cloth::buildGrid() {
   // TODO (Part 1): Build a grid of masses and springs.
+  
+    // Create Pinned Masses Boolean Vector
+    vector<vector<bool>> pin(num_width_points, vector<bool>(num_height_points, false));
+    for (auto point : pinned) {
+        pin[point[0]][point[1]] = true;
+    }
+    double xSpace = static_cast<double>(width) / (num_width_points - 1);
+    double otherSpace = static_cast<double>(height) / (num_height_points - 1);
+    //Set the y coordinate for all point masses to 1 while varying positions over the xz plane
+    if (this->orientation == HORIZONTAL) {
+        for (int z = 0; z < num_height_points; z++) {
+            for (int x = 0; x < num_width_points; x++) {
+                Vector3D position = Vector3D(x * xSpace, 1, z * otherSpace);
+                point_masses.emplace_back(PointMass(position, pin[x][z]));
+            }
+        }
+    }
+    else {
+        //generate a small random offset between -1/1000 and 1/1000 for each point mass and use that as the z coordinate while varying positions over the xy plane
+        double zOffSet = -0.001 + static_cast<double>(rand()) / (RAND_MAX / 0.002);
+        for (int y = 0; y < num_height_points; y++) {
+            for (int x = 0; x < num_width_points; x++) {
+                Vector3D position = Vector3D(x * xSpace, y * otherSpace, zOffSet);
+                point_masses.emplace_back(PointMass(position, pin[x][y]));
+            }
+        }
+    }
+    // add springs
+    for (int j = 0; j < num_height_points; j++) {
+        for (int i = 0; i < num_width_points; i++) {
+            PointMass *p = &point_masses[j * num_width_points + i];
+
+            // Structural Constraint with point mass to left ( i - 1) and above (j - 1)
+            if (i - 1 >= 0) { springs.emplace_back(Spring(p, &point_masses[j * num_width_points + (i-1)], STRUCTURAL)); }
+            if (j - 1 >= 0) { springs.emplace_back(Spring(p, &point_masses[(j - 1) * num_width_points + i], STRUCTURAL)); }
+
+            // Shearing Constraint with point mass to diagonal upper left and upper right (i-1, j-1), (i+1, j-1)
+            if (i - 1 >= 0 && j - 1 >= 0) { springs.emplace_back(Spring(p, &point_masses[(j - 1) * num_width_points + (i - 1)], SHEARING)); }
+            if (i + 1 < num_width_points && j - 1 >= 0) { springs.emplace_back(Spring(p, &point_masses[(j - 1) * num_width_points + (i + 1)], SHEARING)); }
+
+            // Bending Constraint with point mass two to left and two above ( i - 2) (j - 2)
+            if (i - 2 >= 0) { springs.emplace_back(Spring(p, &point_masses[j * num_width_points + (i - 2)], BENDING)); }
+            if (j - 2 >= 0) { springs.emplace_back(Spring(p, &point_masses[(j - 2) * num_width_points + i], BENDING)); }
+
+        }
+        
+    }
+
 
 }
 
