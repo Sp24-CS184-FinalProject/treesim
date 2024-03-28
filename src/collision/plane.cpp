@@ -12,7 +12,20 @@ using namespace CGL;
 
 void Plane::collide(PointMass &pm) {
   // TODO (Part 3): Handle collisions with planes.
+  //determine if collission occurred. 
+    double detLast = dot(normal, pm.last_position);
+    double detCurr = dot(normal, pm.position);
+    if ((detLast < 0.0) && (detCurr < 0.0) || (detLast > 0.0) && (detCurr > 0.0) || detLast == 0.0 && detCurr == 0.0) { return; } 
 
+    Vector3D l = (pm.last_position - pm.position).unit();
+    double d = dot(pm.last_position - point, normal) / dot(l, normal);
+    Vector3D tangent = pm.last_position + l * d;
+
+    Vector3D correction = (tangent - pm.last_position);
+    // Identify Which Axis To Apply  Surface Offset.
+    
+    correction.y += SURFACE_OFFSET;
+    pm.position = pm.last_position + correction * (1 - friction);
 }
 
 void Plane::render(GLShader &shader) {

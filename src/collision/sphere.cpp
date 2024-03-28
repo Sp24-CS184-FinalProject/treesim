@@ -9,7 +9,14 @@ using namespace CGL;
 
 void Sphere::collide(PointMass &pm) {
   // TODO (Part 3): Handle collisions with spheres.
-
+	// test if collision or interesection occurrs
+	
+	if ((pm.position - origin).norm() > radius) { return; }
+	// Calculate Where Intersection Point Should have been by extending vector (pm - origin) to sphere surface, this is the tangent point
+	Vector3D tangent =  origin  + radius * (pm.position - origin).unit();
+	
+	Vector3D correction = tangent - pm.last_position;
+	pm.position = pm.last_position +  correction * (1 - friction);
 }
 
 void Sphere::render(GLShader &shader) {

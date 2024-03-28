@@ -121,19 +121,24 @@ void Cloth::simulate(double frames_per_sec, double simulation_steps, ClothParame
       Vector3D newPos = p.position + (1.0 - (cp->damping / 100.0)) * (p.position - p.last_position) + (p.forces / mass) * delta_t * delta_t;
       p.last_position = p.position;
       p.position = newPos;
+      for (auto& primitive : *collision_objects) {
+          primitive->collide(p);
+      }
+
+     
+
   }
   
-
+  // TODO (Part 3): Handle collisions with other primitives.
+  
   // TODO (Part 4): Handle self-collisions.
 
 
-  // TODO (Part 3): Handle collisions with other primitives.
-
-
+  
   // TODO (Part 2): Constrain the changes to be such that the spring does not change
   // in length more than 10% per timestep [Provot 1995].
   for (auto &s : springs) {
-      if (s.spring_type == BENDING) { continue; }
+      
       double dist = (s.pm_a->position - s.pm_b->position).norm();
       if (dist <= s.rest_length * 1.10) { continue; }
       double clamp = dist - (s.rest_length * 1.10);
