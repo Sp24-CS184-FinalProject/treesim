@@ -166,7 +166,9 @@ void Cloth::build_spatial_map() {
   // TODO (Part 4): Build a spatial map out of all of the point masses.
   for (auto &p : point_masses ) { 
       float key = hash_position(p.position);
+      vector<PointMass*>* ptr = new vector<PointMass*>;
       map.try_emplace(key, new vector<PointMass*>);
+      if (map[key] != ptr) { delete(ptr); }
       map[key]->push_back(&p);
   }
 }
