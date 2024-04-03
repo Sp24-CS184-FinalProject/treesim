@@ -21,7 +21,7 @@ void main() {
   vec4 h = normalize(v_position + l);
   float hdot = dot(v_normal, h);
 
-  vec3 color_out =  (0.3 * Ia) + (.2 * IoverR2 * max(0, ndotl)) + (2.0 * IoverR2 * max(0, pow(hdot, 32)));
+  vec3 color_out =  (0.2 * Ia)+ (.2 * IoverR2 * max(0, ndotl)) + (1.0 * IoverR2 * max(0, pow(hdot, 10)));
   // (Placeholder code. You will want to replace it.)
   out_color = vec4(color_out, 1);
 }
