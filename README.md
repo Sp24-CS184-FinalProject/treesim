@@ -1,5 +1,10 @@
 
-# Final Project: Tree Simulation 
+# Final Project: Physical Tree & Weather Simulation 
+Team Members: 
+- Adam Dong, adam2451
+- Kaleb Dawit, kalebdawit
+- Owen Hu, Edge7481
+- Rishabh Sharma, RishSharma7
 
 Resources We've Based This Project On
   - [Homework 4: Cloth Simulation](https://cs184.eecs.berkeley.edu/sp24/docs/hw4)
