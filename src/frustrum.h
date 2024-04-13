@@ -8,7 +8,7 @@
 
 #include "CGL/CGL.h"
 #include "CGL/misc.h"
-#include "clothMesh.h"
+#include "frustrumMesh.h"
 #include "collision/collisionObject.h"
 #include "spring.h"
 
@@ -18,10 +18,11 @@ using namespace CGL;
 class Halfedge;
 
 struct Frustrum {
-	Frustrum(Vector3D baseOriginPos, double baseRadius, Vector3D topOriginPos, double topRadius, double height)
-		: baseOriginPos(baseOriginPos), baseOriginLastPos(baseOriginPos), topOriginPos(topOriginPos), topOriginLastPos(topOriginLastPos){}
-
-
+	Frustrum() {}
+	Frustrum(Vector3D baseOriginPos, double baseRadius, Vector3D topOriginPos, double topRadius, double height, int numSides)
+		: baseOriginPos(baseOriginPos), baseOriginLastPos(baseOriginPos),
+		topOriginPos(topOriginPos), topOriginLastPos(topOriginLastPos), numSides(numSides) {}
+	~Frustrum();
 
 	
 	void buildFrustrumMesh();
@@ -34,6 +35,7 @@ struct Frustrum {
 		Vector3D baseOriginLastPos;
 		Vector3D topOriginPos;
 		Vector3D topOriginLastPos;
+		int numSides; // determines detail of mesh: number of vertices and triangles
 
 	//Static Values 
 		double baseRadius;
@@ -41,5 +43,5 @@ struct Frustrum {
 		double height;
 
 	// Mesh Reference
-		Halfedge* halfedge;
+		FrustrumMesh* mesh;
 };
