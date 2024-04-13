@@ -34,7 +34,7 @@ void Frustrum::buildFrustrumMesh() {
     std::vector<Vector3D> topVertices;
     std::vector<Vector3D> lateralVertices;
 
-    // Calculate vertices for the bottom circle
+    // Calculate vertices for the bottom & top of circle
     for (int i = 0; i < numSides; ++i) {
         double angle = 2 * PI * i / numSides;
         double x = baseOriginPos.x + baseRadius * cos(angle);
@@ -51,9 +51,17 @@ void Frustrum::buildFrustrumMesh() {
         
     }
 
-    //calculate vertices for the lateral surface using the previous two sets of vertices
+    // Calculate vertices for the lateral surface using the previous two sets of vertices
     // lateral vertices appear on the line connecting two vertices on the top and bottom circles (make sure angle is same)
+    // For now assume we only need one lateral vertex per pair of vertices on the circles.
+    for (int i = 0; i < numSides; ++i) {
+        Vector3D baseVert = baseVertices[i];
+        Vector3D topVert = topVertices[i];
+        Vector3D line = (topVert - baseVert).unit();
+        Vector3D lateralVert = baseVert + (height / 2) * line; // move from base vert towards topVert moving half the distance between them
+        lateralVertices.push_back(lateralVert);
 
+    }
     
     
 
